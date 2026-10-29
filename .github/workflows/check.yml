@@ -1,0 +1,21 @@
+name: Ready to publish
+
+# Fails while a page still has a placeholder the stores would reject.
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  placeholders:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: No placeholder is left
+        run: |
+          if grep -rn "SUPPORT_EMAIL_PENDING" --include=*.html .; then
+            echo "::error::Replace SUPPORT_EMAIL_PENDING with the support email."
+            exit 1
+          fi
